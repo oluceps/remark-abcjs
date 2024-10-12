@@ -1,0 +1,40 @@
+name: Unit tests and build
+
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+           - recursive: true
+             args: [--frozen-lockfile, --strict-peer-dependencies]
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Build
+        shell: bash
+        run: |
+         pnpm build
+
+      - name: Execute Unit tests
+        shell: bash
+        run: |
+         pnpm test
