@@ -1,0 +1,44 @@
+name: Deploy dist
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: |
+           - recursive: true
+             args: [--frozen-lockfile, --strict-peer-dependencies]
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Build the project
+        run: pnpm build
+
+      - name: Deploy to dist branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git checkout --orphan dist
+          mkdir -p bin
+          mv dist bin/
+          mv package.json bin/
+          mv pnpm-lock.yaml bin/
+          mv vite.config.js bin/
+          git --work-tree bin add --all
+          git --work-tree bin commit -m "Deploy build product from GitHub Actions"
+          git push origin HEAD:bin --force
+

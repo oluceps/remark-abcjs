@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      abcjs:
+        specifier: git://github.com/oluceps/abcjs#7d958b50fd1a04911d713fecdc5e26396df869a2
+        version: https://codeload.github.com/oluceps/abcjs/tar.gz/7d958b50fd1a04911d713fecdc5e26396df869a2
+      jsdom:
+        specifier: ^25.0.1
+        version: 25.0.1
       unified:
         specifier: ^11.0.0
         version: 11.0.5
@@ -15,12 +21,6 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
     devDependencies:
-      abcjs:
-        specifier: git://github.com/oluceps/abcjs#7d958b50fd1a04911d713fecdc5e26396df869a2
-        version: https://codeload.github.com/oluceps/abcjs/tar.gz/7d958b50fd1a04911d713fecdc5e26396df869a2
-      jsdom:
-        specifier: ^25.0.1
-        version: 25.0.1
       remark-parse:
         specifier: ^10.0.2
         version: 10.0.2
