@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkMusic from ".";
@@ -10,8 +11,7 @@ describe("remark music", () => {
 Paragraph.
 `;
 
-    const parsed = await unified().use(remarkParse).parse(markdown);
-
+    const parsed = unified().use(remarkParse).parse(markdown);
     const result = await unified().use(remarkMusic).run(parsed);
 
     expect(result).toStrictEqual(parsed);
@@ -32,8 +32,7 @@ Code in a different language
 \`\`\`
 `;
 
-    const parsed = await unified().use(remarkParse).parse(markdown);
-
+    const parsed = unified().use(remarkParse).parse(markdown);
     const result = await unified().use(remarkMusic).run(parsed);
 
     expect(result).toStrictEqual(parsed);
@@ -58,13 +57,11 @@ Code in a different language
 \`\`\`
 `;
 
-    const parsed = await unified().use(remarkParse).parse(markdown);
-
+    const parsed = unified().use(remarkParse).parse(markdown);
     const result = await unified().use(remarkMusic).run(parsed);
 
     expect(result).not.toStrictEqual(parsed);
-
-    expect(result.children.map((node) => node.type)).toContainEqual("abc");
+    expect(result.children.map((node) => node.type)).toContain("abc");
 
     const abcNode = result.children.find((node) => node.type === "abc");
     expect(abcNode.value).toBe("X:1\nT:My Song\nM:4/4\nL:1/8\nK:C");
