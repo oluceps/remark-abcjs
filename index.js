@@ -1,29 +1,35 @@
+import { fromDom } from "hast-util-from-dom";
 import map from "unist-util-map";
+import { JSDOM } from "jsdom";
 import ABCJS from "abcjs";
 
-export default () => (tree) => {
-  return map(tree, (node) => {
-    if (node.type === "code" && node.lang === "abc") {
-      const abcOutput = ABCJS.renderAbc(null, node.value, { returnString: true });
+const remarkMusic = () => {
+  return (tree, _) => {
+    return map(tree, (node) => {
+      if (node.type === "code" && node.lang === "abc") {
+        const {
+          window: { document },
+        } = new JSDOM();
 
-      return {
-        type: "abc",
-        value: node.value,
-        data: {
-          hName: "div",
-          hProperties: {
-            className: ["abcjsContainer"],
+        const renderInto = document.createElement("div");
+        renderInto.className = "abcjsContainer";
+        ABCJS.renderAbc(renderInto, node.value);
+        const data = fromDom(renderInto);
+
+        return {
+          type: "abc",
+          value: node.value,
+          data: {
+            hName: data.tagName,
+            hProperties: data.properties,
+            hChildren: data.children,
           },
-          hChildren: [
-            {
-              type: "text",
-              value: abcOutput,
-            },
-          ],
-        },
-      };
-    } else {
-      return node;
-    }
-  });
+        };
+      } else {
+        return node;
+      }
+    });
+  };
 };
+
+export default remarkMusic;
